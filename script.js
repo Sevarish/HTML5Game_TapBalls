@@ -4,7 +4,7 @@ canvas.width = window.innerWidth ;
 canvas.height = window.innerHeight;
 
 
-let dragBall = new Point(canvas.width/2,canvas.height/2,10);
+let dragBall = new Point(canvas.width/2,canvas.height/2,20);
 let lastPosPoint = new Point(canvas.width/2,canvas.height/2,0);
 let lastPos = new Vector2d(50,0);
 var speed = 0;
@@ -19,6 +19,15 @@ var score = 0;
 var highscore = 0;
 var anim1 = new Image(25,25);
 anim1.src = "anim1.png";
+var anim2 = new Image(25,25);
+anim2.src = "anim2.png";
+var anim3 = new Image(25,25);
+anim3.src = "anim3.png";
+var anim4 = new Image(25,25);
+anim4.src = "anim4.png";
+let animation = [anim1,anim2,anim3,anim4];
+var animationTimer = 0;
+var currentAnimation = 0;
 function setup() {
   dragBall.pos = new Vector2d(canvas.width  / 2, canvas.height / 2);
   lastPosPoint.pos = new Vector2d(canvas.width  / 2 , canvas.height / 2)
@@ -29,8 +38,20 @@ function setup() {
 function animate(){
   context.clearRect(0,0,canvas.width,canvas.height);
   requestAnimationFrame(animate);
+  context.fillStyle = "lightblue";
+  context.fillRect(0, 0, canvas.width, canvas.height);
   dragBall.draw(context);
-  context.drawImage(anim1, 10, 10);
+  animationTimer++;
+  if (animationTimer > 5) {
+    animationTimer = 0;
+    if (currentAnimation >= animation.length - 1) {
+      currentAnimation = 0;
+    }
+    else {
+      currentAnimation++;
+    }
+  }
+  context.drawImage(animation[currentAnimation],lastPos.dx - 25, lastPos.dy - 25)
   speed = dragBall.distanceToOtherPoint(lastPosPoint);
   lastPos.dx = dragBall.x;
   lastPos.dy = dragBall.y;
@@ -67,7 +88,7 @@ function animate(){
 if (score > highscore) {
   highscore = score;
 }
-context.font = "30px Arial";
+context.font = "20px Arial";
 context.fillStyle = "black";
 context.fillText("Score: " + score, 10, 50);
 context.fillText("Lives: " + lives, 10, 100);
